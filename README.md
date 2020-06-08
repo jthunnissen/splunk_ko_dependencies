@@ -3,6 +3,10 @@ A splunk app for app developers to search and investigate dependencies between k
 
 The app lists all dependencies between dashboards (views), prebuilt panels, saved searches, search macro's, lookup definitions and lookup tables. These are visualised in a tree-like manner. Dependencies can be viewed both upstream and downstream. Supported also are datasource dependencies, indicating that a KO uses data originating from another.
 
+Also included are:
+* an overview of broken references that developers may want to fix
+* an overview of KO's without dependencies. Especially for KO's other than dashboards and saved searches this suggests they are unused and cleanup is in order.
+
 The app is able to detect almost all KO references, but there are a few exceptions. Currently unsupported are links to reports, deprecated (as of 7.x) simple xml syntax and dynamic references using variable substitution.
 
 ## installation
