@@ -1,4 +1,4 @@
-# Splunk knowledge objects_dependencies
+# Splunk knowledge objects dependencies
 A splunk app for app developers to search and investigate dependencies between knowledge objects.
 
 The app lists all dependencies between dashboards (views), prebuilt panels, saved searches, search macro's, lookup definitions and lookup tables. These are visualised in a tree-like manner. Dependencies can be viewed both upstream and downstream. Supported also are datasource dependencies, indicating that a KO uses data originating from another.
