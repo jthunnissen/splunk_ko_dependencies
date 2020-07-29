@@ -1,0 +1,183 @@
+<form theme="light">
+  <search id="list_knowledge_objects">
+    <query>
+      | inputlookup savedsearches 
+      | append [| inputlookup views]
+      | append [| inputlookup lookupdefinitions]
+      | append [| inputlookup lookuptables]
+      | append [| inputlookup searchmacros]
+      | append [| inputlookup panels]
+      | table type sharing app owner title disabled fqn
+    </query>
+  </search>
+  <search id="ko_all_dependencies" ref="ko_all_dependencies">
+    <cache>1200</cache>
+  </search>
+  <search id="ko_all_dependencies_preprocessed" base="ko_all_dependencies">
+    <query>
+      | eval orig_source=source
+      | eval source=if($dep_downstream$=1, destination, source), destination=if($dep_downstream$=1, orig_source, destination)
+      | eval source=if($dep_datasource$=1 and in(relation,"outputlookup"), destination, source), destination=if($dep_datasource$=1 and in(relation,"outputlookup"), orig_source, destination)
+      | fields - orig_source
+      | outputlookup ko_all_dependencies
+      | outputlookup KO_dependency_directed_graph
+    </query>
+  </search>
+  <!--<search id="selected_ko_dependencies" base="ko_all_dependencies_preprocessed">-->
+  <!--  <query>-->
+  <!--    | `construct_rooted_acyclic_directed_subgraph("KO_dependency_directed_graph", $root_ko_escaped|s$, 20)`-->
+  <!--  </query>-->
+  <!--</search>-->
+  <label>Knowledge Object Dependencies</label>
+  <description>This dashboard shows all dependencies between dashboards (views), prebuilt panels, saved searches, search macro's, lookup definitions and lookup tables. Supported also are datasource dependencies, indicating that a KO uses data originating from another.
+Currently unsupported are links to reports, deprecated simple xml syntax and dynamic references using variable substitution. Changes saved before the top of the hour will be visible 30 minutes past the hour at the latest.</description>
+  <fieldset submitButton="false"></fieldset>
+  <row>
+    <panel>
+      <title>Select knowledge object for analysis</title>
+      <input type="dropdown" token="type" searchWhenChanged="true">
+        <label>Type</label>
+        <fieldForLabel>type</fieldForLabel>
+        <fieldForValue>type</fieldForValue>
+        <search base="list_knowledge_objects">
+          <query>| table type | dedup type | sort type</query>
+        </search>
+        <choice value="*">All</choice>
+        <default>*</default>
+      </input>
+      <input type="dropdown" token="app" searchWhenChanged="true">
+        <label>App</label>
+        <fieldForLabel>app</fieldForLabel>
+        <fieldForValue>app</fieldForValue>
+        <search base="list_knowledge_objects">
+          <query>| table app | dedup app | sort app</query>
+        </search>
+        <choice value="*">All</choice>
+        <default>*</default>
+      </input>
+      <input type="dropdown" token="owner" searchWhenChanged="true">
+        <label>Owner</label>
+        <fieldForLabel>owner</fieldForLabel>
+        <fieldForValue>owner</fieldForValue>
+        <search base="list_knowledge_objects">
+          <query>| table owner | dedup owner | sort owner</query>
+        </search>
+        <choice value="*">All</choice>
+        <default>*</default>
+      </input>
+      <input type="text" token="title" searchWhenChanged="true">
+        <label>Title</label>
+        <default>*</default>
+        <prefix>*</prefix>
+        <suffix>*</suffix>
+        <initialValue>*</initialValue>
+      </input>
+      <input type="checkbox" token="include_disabled" searchWhenChanged="true">
+        <label></label>
+        <choice value="yes">Include disabled</choice>
+        <delimiter> </delimiter>
+        <change>
+          <eval token="disabled">if(isnull($include_disabled$),"0","*")</eval>
+        </change>
+      </input>
+      <table>
+        <search base="list_knowledge_objects">
+          <query>| search type="$type$" app=$app$ owner=$owner$ title=$title|s$ disabled=$disabled$</query>
+        </search>
+        <option name="count">5</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">row</option>
+        <option name="percentagesRow">false</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+        <fields>["type","sharing","app","owner","title","disabled"]</fields>
+        <drilldown>
+          <set token="root_ko">$row.fqn$</set>
+          <set token="root_ko_escaped">$row.fqn|s$</set>
+          <unset token="form.source"></unset>
+          <unset token="form.destination"></unset>
+        </drilldown>
+      </table>
+    </panel>
+  </row>
+  <row depends="$root_ko$">
+    <panel>
+      <title>Dependencies of $root_ko$</title>
+      <input type="radio" token="dep_downstream" searchWhenChanged="true">
+        <label>Dependency direction</label>
+        <choice value="0">depedencies OF selected KO</choice>
+        <choice value="1">depedencies ON selected KO</choice>
+        <default>0</default>
+      </input>
+      <input type="radio" token="dep_datasource" searchWhenChanged="true">
+        <label>Dependency type</label>
+        <choice value="0">reference</choice>
+        <choice value="1">data source</choice>
+        <default>0</default>
+      </input>
+      <input type="dropdown" token="max_depth" searchWhenChanged="true">
+        <label>Max depth</label>
+        <choice value="5">5</choice>
+        <choice value="10">10</choice>
+        <choice value="15">15</choice>
+        <choice value="20">20</choice>
+        <choice value="30">30</choice>
+        <choice value="50">50</choice>
+        <choice value="75">75</choice>
+        <choice value="99">99</choice>
+        <default>10</default>
+      </input>
+      <viz type="sankey_diagram_app.sankey_diagram">
+        <search base="ko_all_dependencies_preprocessed">
+          <query>
+            | `construct_rooted_acyclic_directed_subgraph("KO_dependency_directed_graph", $root_ko_escaped|s$, $max_depth$)`
+            | eval size=1, color=1
+            | table source destination size
+          </query>
+        </search>
+        <option name="refresh.display">progressbar</option>
+        <option name="sankey_diagram_app.sankey_diagram.colorMode">categorical</option>
+        <option name="sankey_diagram_app.sankey_diagram.maxColor">#3fc77a</option>
+        <option name="sankey_diagram_app.sankey_diagram.minColor">#d93f3c</option>
+        <option name="sankey_diagram_app.sankey_diagram.numOfBins">6</option>
+        <option name="sankey_diagram_app.sankey_diagram.showBackwards">true</option>
+        <option name="sankey_diagram_app.sankey_diagram.showLabels">true</option>
+        <option name="sankey_diagram_app.sankey_diagram.showLegend">false</option>
+        <option name="sankey_diagram_app.sankey_diagram.showSelf">false</option>
+        <option name="sankey_diagram_app.sankey_diagram.showTooltip">false</option>
+        <option name="sankey_diagram_app.sankey_diagram.styleBackwards">true</option>
+        <option name="sankey_diagram_app.sankey_diagram.useColors">true</option>
+        <drilldown>
+          <set token="form.source">$row.source$</set>
+          <set token="form.destination">$row.destination$</set>
+        </drilldown>
+      </viz>
+    </panel>
+  </row>
+  <row depends="$root_ko$">
+    <panel>
+      <title>Table view - click a dependency above to filter</title>
+      <input type="text" token="source" searchWhenChanged="true">
+        <label>source</label>
+        <default>*</default>
+      </input>
+      <input type="text" token="destination" searchWhenChanged="true">
+        <label>destination</label>
+        <default>*</default>
+      </input>
+      <table>
+        <search base="ko_all_dependencies_preprocessed">
+          <query>
+            | `construct_rooted_acyclic_directed_subgraph("KO_dependency_directed_graph", $root_ko_escaped|s$, $max_depth$)`
+            | lookup ko_all_dependencies source destination OUTPUT relation as relations
+            | search source=$source|s$ destination=$destination|s$
+          </query>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+  </row>
+</form>

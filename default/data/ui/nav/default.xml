@@ -1,0 +1,4 @@
+<nav search_view="search">
+  <view name="knowledge_object_dependencies" default='true' />
+  <view name="dependency_warnings" />
+</nav>

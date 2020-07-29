@@ -1,0 +1,106 @@
+<form>
+  <label>Dependency warnings</label>
+  <search id="list_knowledge_objects">
+    <query>
+      | inputlookup savedsearches 
+      | append [| inputlookup views]
+      | append [| inputlookup lookupdefinitions]
+      | append [| inputlookup lookuptables]
+      | append [| inputlookup searchmacros]
+      | append [| inputlookup panels]
+      | table type sharing app owner title disabled fqn
+    </query>
+  </search>
+  <search id="ko_all_dependencies" ref="ko_all_dependencies">
+    <cache>1200</cache>
+    <done>
+      <set token="show_unreferenced_KOs" />
+    </done>
+  </search>
+  <fieldset submitButton="false">
+    <input type="dropdown" token="type" searchWhenChanged="true">
+      <label>Type</label>
+      <fieldForLabel>type</fieldForLabel>
+      <fieldForValue>type</fieldForValue>
+      <search base="list_knowledge_objects">
+        <query>| table type | dedup type | sort type</query>
+      </search>
+      <choice value="*">All</choice>
+      <default>*</default>
+    </input>
+    <input type="dropdown" token="app" searchWhenChanged="true">
+      <label>App</label>
+      <fieldForLabel>app</fieldForLabel>
+      <fieldForValue>app</fieldForValue>
+      <search base="list_knowledge_objects">
+        <query>| table app | dedup app | sort app</query>
+      </search>
+      <choice value="*">All</choice>
+      <default>*</default>
+    </input>
+    <input type="dropdown" token="owner" searchWhenChanged="true">
+      <label>Owner</label>
+      <fieldForLabel>owner</fieldForLabel>
+      <fieldForValue>owner</fieldForValue>
+      <search base="list_knowledge_objects">
+        <query>| table owner | dedup owner | sort owner</query>
+      </search>
+      <choice value="*">All</choice>
+      <default>*</default>
+    </input>
+    <input type="checkbox" token="include_private" searchWhenChanged="true">
+      <label></label>
+      <choice value="yes">Include private</choice>
+      <delimiter> </delimiter>
+      <change>
+        <eval token="private">if(isnull($include_private$),0,"*")</eval>
+      </change>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <title>Broken references</title>
+      <html>References might be broken becasue of a several reasons:
+        <ol>
+          <li>Syntax issue in SPL of SimpleXML</li>
+          <li>The referenced KO does not exist</li>
+          <li>The referenced KO is private, while it is referenced from a shared KO</li>
+          <li>The referenced KO resides in another app, but it is not shared globally</li>
+        </ol>
+      </html>
+      <table>
+        <search base="ko_all_dependencies">
+          <query>
+            | where destination like "BROKEN REFERENCE: %"
+            | rex field=source "^((?&lt;private&gt;private) )?(?&lt;type&gt;[\\w ]+) (?&lt;owner&gt;[^:]+):(?&lt;app&gt;[^:]+):(?&lt;title&gt;.+)$"
+            | eval private=if(isnull(private),0,1)
+            | search type=$type|s$ app=$app|s$ owner=$owner|s$ private=$private$
+            | rename destination as reference
+            | table private type owner app title relation reference
+          </query>
+        </search>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Unreferenced knowledge objects</title>
+      <html>Especially for KO's other than dashboards and saved searches this suggests they are unused.</html>
+      <table depends="show_unreferenced_KOs">
+        <search base="list_knowledge_objects">
+          <query>
+            | join fqn type=inner 
+                [ | loadjob savedsearch="thunn500:ko_dependencies:ko_all_dependencies" 
+                | table destination
+                | rename destination as fqn ]
+            | eval private=if(sharing="user",0,1)
+            | search type=$type|s$ app=$app|s$ owner=$owner|s$ private=$private$
+            | table private type owner app title
+          </query>
+        </search>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+</form>
