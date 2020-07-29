@@ -25,3 +25,5 @@ Note that the app uses scheduled saved searches that need to run before any cont
 
 ## Support
 This app is provided as-is with limited developer support.
+The project on Github: https://github.com/jthunnissen/splunk_ko_dependencies.
+Developer contact: thatswhydata@gmail.com
