@@ -21,7 +21,7 @@ match_limit = 100000
 depth_limit = 10000
 ```
 
-Note that the app uses scheduled saved searches that need to run before any content will be visible. After installation, you need to wait until upto 30 minutes past the next top of the hour before the app will show content.
+That the app uses scheduled saved searches that need to run with before any content will be visible. After installation, you need to wait until upto 30 minutes past the next top of the hour before the app will show content. These searches need read access to all knowledge objects. Out-of-the box these searches are owned by and run-as the ``admin`` user. If this account does not exist in your installation, reassign ownership of all saved searches in this app to another user that does have sufficient priviledges.
 
 ## Support
 This app is provided as-is with limited developer support.
