@@ -91,7 +91,7 @@
         <search base="list_knowledge_objects">
           <query>
             | join fqn type=inner 
-                [ | loadjob savedsearch="thunn500:ko_dependencies:ko_all_dependencies" 
+                [ | loadjob savedsearch="admin:ko_dependencies:ko_all_dependencies" 
                 | table destination
                 | rename destination as fqn ]
             | eval private=if(sharing="user",0,1)
