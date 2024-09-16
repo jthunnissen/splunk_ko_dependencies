@@ -1,252 +1,165 @@
+[]
+access = read : [ * ], write : []
+
 [app/ui]
-version = 7.2.5
-modtime = 1577031109.667912300
 
 [app/launcher]
-version = 7.2.5
-modtime = 1577031109.681872400
 
 [views/knowledge_object_dependencies]
 export = none
 owner = admin
-version = 7.2.7
-modtime = 1591715366.030131000
 
 [macros/construct_rooted_acyclic_directed_subgraph%283%29]
 export = none
 owner = admin
-version = 7.2.7
-modtime = 1583920195.278009000
 
 [macros/construct_rooted_acyclic_directed_subgraph_helper%283%29]
 export = none
 owner = admin
-version = 7.2.7
-modtime = 1583920201.574411000
 
 [transforms/KO_dependency_directed_graph]
 export = none
 owner = admin
-version = 7.2.7
-modtime = 1583920201.577035000
 
 [nav/default]
-version = 7.2.7
-modtime = 1591449999.944645000
 
 [collections/ko_dependencies_savedsearches]
 export = none
 owner = admin
-version = 7.2.7
-modtime = 1583920201.596603000
 
 [savedsearches/list_lookupdefinitions]
 export = none
 owner = admin
-version = 7.2.7
-modtime = 1591369290.914568000
 
 [savedsearches/list_panels]
 export = none
 owner = admin
-version = 7.2.7
-modtime = 1591191583.253427000
 
 [savedsearches/list_savedsearches]
 export = none
 owner = admin
-version = 7.2.7
-modtime = 1591191458.696273000
 
 [savedsearches/list_searchmacros]
 export = none
 owner = admin
-version = 7.2.7
-modtime = 1591191717.136451000
 
 [savedsearches/list_views]
 export = none
 owner = admin
-version = 7.2.7
-modtime = 1591191484.167549000
 
 [transforms/lookupdefinitions]
 export = none
 owner = admin
-version = 7.2.7
-modtime = 1591369249.839489000
 
 [transforms/savedsearches]
 export = none
 owner = admin
-version = 7.2.7
-modtime = 1583920201.616241000
 
 [macros/lookup_ko_fqn_from_title%281%29]
 export = none
 owner = admin
-version = 7.2.7
-modtime = 1591374415.764514000
 
 [transforms/views]
 export = none
 owner = admin
-version = 7.2.7
-modtime = 1583920201.625717000
 
 [collections/ko_dependencies_views]
 export = none
 owner = admin
-version = 7.2.7
-modtime = 1583920201.601502000
 
 [macros/expand_references]
 export = none
 owner = admin
-version = 7.2.7
-modtime = 1591347821.152786000
 
 [savedsearches/ko_all_dependencies]
 export = none
 owner = admin
-version = 7.2.7
-modtime = 1591445157.038692000
 
 [macros/unescape_simplexml%281%29]
 export = none
 owner = admin
-version = 7.2.7
-modtime = 1583920201.620996000
 
 [macros/unescape_spl%281%29]
 export = none
 owner = admin
-version = 7.2.7
-modtime = 1583920201.623348000
 
 [collections/ko_dependencies_panels]
 export = none
 owner = admin
-version = 7.2.7
-modtime = 1583920201.594148000
 
 [savedsearches/parse_spl_references]
-access = read : [ * ], write : [ admin, power ]
 export = none
 owner = admin
-version = 7.2.7
-modtime = 1591374672.533797000
 
 [savedsearches/parse_simplexml_references]
-access = read : [ * ], write : [ admin, power ]
 export = none
 owner = admin
-version = 7.2.7
-modtime = 1591364056.506900000
 
 [transforms/searchmacros]
 export = none
 owner = admin
-version = 7.2.7
-modtime = 1583920201.618623000
 
 [transforms/panels]
 export = none
 owner = admin
-version = 7.2.7
-modtime = 1583920201.611509000
 
 [collections/ko_dependencies_searchmacros]
 export = none
 owner = admin
-version = 7.2.7
-modtime = 1583920201.599030000
 
 [macros/regex_spl_param_value%282%29]
 export = none
 owner = admin
-version = 7.2.7
-modtime = 1591367320.251163000
 
 [collections/ko_dependencies_KO_dependency_directed_graph]
 export = none
 owner = admin
-version = 7.2.7
-modtime = 1583920201.584491000
 
 [transforms/ko_all_dependencies]
 export = none
 owner = admin
-version = 7.2.7
-modtime = 1583920201.581752000
 
 [collections/ko_dependencies_ko_all_dependencies]
 export = none
 owner = admin
-version = 7.2.7
-modtime = 1583920201.591770000
 
 [app/install/install_source_checksum]
-version = 8.0.3
-modtime = 1592951293.561820000
 
 [lookups/release.csv]
-version = 7.2.7
-modtime = 1591451205.370434000
 
 [macros/parse_simplexml_reference]
 export = none
 owner = admin
-version = 7.2.7
-modtime = 1591361326.130309000
 
 [macros/lookup_ko_fqn_from_title_and_app%281%29]
 export = none
 owner = admin
-version = 7.2.7
-modtime = 1591374554.453156000
 
 [transforms/inline_searches]
 export = none
 owner = admin
-version = 7.2.7
-modtime = 1591302210.507807000
 
 [collections/ko_dependencies_inline_searches]
 owner = admin
-version = 7.2.7
-modtime = 1591302421.155162000
 
 [collections/ko_dependencies_lookuptables]
 owner = admin
-version = 7.2.7
-modtime = 1591368862.585338000
 
 [transforms/lookuptables]
 export = none
 owner = admin
-version = 7.2.7
-modtime = 1591369064.359584000
 
 [savedsearches/list_lookuptables]
 export = none
 owner = admin
-version = 7.2.7
-modtime = 1591369567.711559000
 
 [collections/ko_dependencies_lookupdefinitions]
 owner = admin
-version = 7.2.7
-modtime = 1591369930.282533000
 
 [savedsearches/parse_lookupdefinition_references]
 export = none
 owner = admin
-version = 7.2.7
-modtime = 1591444272.887168000
 
 [views/dependency_warnings]
 export = none
 owner = admin
-version = 7.2.7
-modtime = 1591450293.998251000
